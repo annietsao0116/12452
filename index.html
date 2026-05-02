@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>八面體取代反應機制 | 無機化學互動學習</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;600;700&family=Noto+Sans+TC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  :root {
+    --bg:        #f5f2eb;
+    --bg2:       #ede9df;
+    --paper:     #faf8f3;
+    --ink:       #2c2a24;
+    --sage:      #7d9b8a;
+    --sage-dk:  #5a7a67;
+    --gold:      #b8973c;
+    --red-note: #c04040;
+    --border:    #ccc5b5;
+    --shadow:    rgba(44,42,36,0.12);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--ink); font-family: 'Noto Sans TC', sans-serif; line-height: 1.8; }
+
+  header { background: var(--ink); color: var(--bg); padding: 2.5rem 3rem; }
+  header h1 { font-family: 'Noto Serif TC', serif; font-size: 1.9rem; margin-bottom: 0.4rem; }
+  
+  nav.toc { background: var(--paper); border-bottom: 2px solid var(--border); padding: 0 3rem; display: flex; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px var(--shadow); }
+  nav.toc a { display: block; padding: 0.9rem 1.2rem; font-size: 0.82rem; color: #5a5750; text-decoration: none; }
+  nav.toc a:hover { color: var(--sage-dk); background: var(--bg2); }
+
+  main { max-width: 940px; margin: 0 auto; padding: 2rem; }
+  .section { margin-bottom: 3rem; }
+  .section-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.4rem; border-bottom: 2px solid var(--border); padding-bottom: 0.8rem; }
+  .section-num { background: var(--sage); color: #fff; padding: 0.2rem 0.6rem; border-radius: 3px; font-family: 'JetBrains Mono', monospace; }
+  .section-title { font-family: 'Noto Serif TC', serif; font-size: 1.35rem; font-weight: 700; }
+
+  .note-card { background: #fffde8; border-left: 4px solid var(--gold); padding: 1.2rem; margin: 1.2rem 0; border-radius: 0 6px 6px 0; font-family: 'Noto Serif TC', serif; box-shadow: 2px 3px 10px rgba(180,155,60,0.1); }
+  .note-card::before { content: '✏️ 手寫筆記'; display: block; font-size: 0.72rem; color: var(--gold); font-weight: 700; margin-bottom: 0.5rem; font-family: 'Noto Sans TC', sans-serif; }
+
+  .progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: var(--sage); z-index: 999; transition: width 0.2s; }
+</style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<header>
+  <h1>八面體取代反應：實驗證據與立體化學</h1>
+  <p>Experimental Evidence in Octahedral Substitution</p>
+</header>
+<nav class="toc">
+  <a href="#s1241">12.4.1 解離機制</a>
+  <a href="#s1244">12.4.4 SN₁CB</a>
+  <a href="#s125">12.5 立體化學</a>
+</nav>
+<main>
+  <section class="section" id="s1241">
+    <div class="section-header"><span class="section-num">12.4.1</span><div class="section-title">解離機制與 LFAE</div></div>
+    <p>在解離機制中，配合物失去一個配體形成五配位過渡態。<strong>配位場活化能 (LFAE)</strong> 是判斷反應速率的關鍵。</p>
+    <div class="note-card">
+      根據你的研究，<span style="color:var(--red-note)">d³</span> 與 <span style="color:var(--red-note)">Low-spin d⁴, d⁵, d⁶</span> 的 LFAE 為正值，因此這些配合物在動力學上是惰性 (inert) 的。
+    </div>
+  </section>
+  <section class="section" id="s1244">
+    <div class="section-header"><span class="section-num">12.4.4</span><div class="section-title">共軛鹼機制 (SN₁CB)</div></div>
+    <p>SN₁CB 反應雖然表現出二階動力學，但本質上是單分子解離反應。OH⁻ 的作用是奪取質子形成共軛鹼。</p>
+  </section>
+</main>
+<script>
+  window.addEventListener('scroll', () => {
+    const doc = document.documentElement;
+    const pct = (window.scrollY / (doc.scrollHeight - doc.clientHeight)) * 100;
+    document.getElementById('progressBar').style.width = pct + '%';
+  });
+</script>
+</body>
+</html>
