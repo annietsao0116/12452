@@ -8,70 +8,1689 @@
   @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@300;400;600;700&family=Noto+Sans+TC:wght@300;400;500;700&family=JetBrains+Mono:wght@400;600&display=swap');
 
   :root {
-    --bg:        #f5f2eb;
-    --bg2:       #ede9df;
-    --paper:     #faf8f3;
-    --ink:       #2c2a24;
-    --sage:      #7d9b8a;
+    --bg:       #f5f2eb;
+    --bg2:      #ede9df;
+    --bg3:      #e5e0d4;
+    --paper:    #faf8f3;
+    --ink:      #2c2a24;
+    --ink-light:#5a5750;
+    --sage:     #7d9b8a;
     --sage-dk:  #5a7a67;
-    --gold:      #b8973c;
+    --dusty:    #8e7b6e;
+    --clay:     #b08060;
+    --mist:     #9aacb8;
+    --mist-dk:  #6e8fa0;
+    --rose:     #b08080;
+    --gold:     #b8973c;
+    --gold-lt:  #d4b86a;
     --red-note: #c04040;
-    --border:    #ccc5b5;
-    --shadow:    rgba(44,42,36,0.12);
+    --blue-note:#4060a0;
+    --green-note:#508060;
+    --border:   #ccc5b5;
+    --shadow:   rgba(44,42,36,0.12);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--ink); font-family: 'Noto Sans TC', sans-serif; line-height: 1.8; }
 
-  header { background: var(--ink); color: var(--bg); padding: 2.5rem 3rem; }
-  header h1 { font-family: 'Noto Serif TC', serif; font-size: 1.9rem; margin-bottom: 0.4rem; }
-  
-  nav.toc { background: var(--paper); border-bottom: 2px solid var(--border); padding: 0 3rem; display: flex; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px var(--shadow); }
-  nav.toc a { display: block; padding: 0.9rem 1.2rem; font-size: 0.82rem; color: #5a5750; text-decoration: none; }
-  nav.toc a:hover { color: var(--sage-dk); background: var(--bg2); }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Noto Sans TC', sans-serif;
+    font-size: 15px;
+    line-height: 1.8;
+    min-height: 100vh;
+  }
 
-  main { max-width: 940px; margin: 0 auto; padding: 2rem; }
-  .section { margin-bottom: 3rem; }
-  .section-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.4rem; border-bottom: 2px solid var(--border); padding-bottom: 0.8rem; }
-  .section-num { background: var(--sage); color: #fff; padding: 0.2rem 0.6rem; border-radius: 3px; font-family: 'JetBrains Mono', monospace; }
-  .section-title { font-family: 'Noto Serif TC', serif; font-size: 1.35rem; font-weight: 700; }
+  /* ── HEADER ── */
+  header {
+    background: var(--ink);
+    color: var(--bg);
+    padding: 2.5rem 3rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(
+      90deg, transparent, transparent 60px,
+      rgba(255,255,255,0.02) 60px, rgba(255,255,255,0.02) 61px
+    ),
+    repeating-linear-gradient(
+      0deg, transparent, transparent 60px,
+      rgba(255,255,255,0.02) 60px, rgba(255,255,255,0.02) 61px
+    );
+    pointer-events: none;
+  }
+  header h1 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 1.9rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.4rem;
+  }
+  header p { color: rgba(245,242,235,0.6); font-size: 0.88rem; letter-spacing: 0.08em; }
+  .chapter-tag {
+    display: inline-block;
+    background: var(--sage);
+    color: #fff;
+    font-size: 0.75rem;
+    padding: 0.2rem 0.7rem;
+    border-radius: 2px;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.8rem;
+    font-family: 'JetBrains Mono', monospace;
+  }
 
-  .note-card { background: #fffde8; border-left: 4px solid var(--gold); padding: 1.2rem; margin: 1.2rem 0; border-radius: 0 6px 6px 0; font-family: 'Noto Serif TC', serif; box-shadow: 2px 3px 10px rgba(180,155,60,0.1); }
-  .note-card::before { content: '✏️ 手寫筆記'; display: block; font-size: 0.72rem; color: var(--gold); font-weight: 700; margin-bottom: 0.5rem; font-family: 'Noto Sans TC', sans-serif; }
+  /* ── NAV ── */
+  nav.toc {
+    background: var(--paper);
+    border-bottom: 2px solid var(--border);
+    padding: 0 3rem;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    position: sticky; top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px var(--shadow);
+  }
+  nav.toc a {
+    display: block;
+    padding: 0.9rem 1.2rem;
+    font-size: 0.82rem;
+    color: var(--ink-light);
+    text-decoration: none;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    transition: all 0.2s;
+    letter-spacing: 0.04em;
+  }
+  nav.toc a:hover, nav.toc a.active {
+    color: var(--sage-dk);
+    border-bottom-color: var(--sage);
+    background: var(--bg2);
+  }
 
-  .progress-bar { position: fixed; top: 0; left: 0; height: 3px; background: var(--sage); z-index: 999; transition: width 0.2s; }
+  /* ── MAIN LAYOUT ── */
+  main { max-width: 940px; margin: 0 auto; padding: 2rem 2rem 6rem; }
+
+  /* ── SECTIONS ── */
+  .section {
+    margin-bottom: 3rem;
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+  .section.visible { opacity: 1; transform: translateY(0); }
+
+  .section-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.4rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 2px solid var(--border);
+  }
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    background: var(--sage);
+    color: #fff;
+    padding: 0.3rem 0.6rem;
+    border-radius: 3px;
+    white-space: nowrap;
+    margin-top: 0.2rem;
+  }
+  .section-title {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--ink);
+  }
+  .section-subtitle {
+    font-size: 0.82rem;
+    color: var(--ink-light);
+    margin-top: 0.2rem;
+  }
+
+  /* ── BODY TEXT ── */
+  .prose { color: var(--ink); line-height: 1.9; margin-bottom: 1rem; }
+  .prose strong { color: var(--sage-dk); font-weight: 600; }
+  .prose em { color: var(--dusty); font-style: normal; border-bottom: 1px dashed var(--clay); }
+
+  /* ── HANDWRITTEN NOTE ── */
+  .note-card {
+    background: #fffde8;
+    border-left: 4px solid var(--gold);
+    padding: 1rem 1.2rem;
+    margin: 1.2rem 0;
+    border-radius: 0 6px 6px 0;
+    position: relative;
+    font-family: 'Noto Serif TC', serif;
+    font-size: 0.93rem;
+    line-height: 1.85;
+    box-shadow: 2px 3px 10px rgba(180,155,60,0.12);
+  }
+  .note-card::before {
+    content: '✏️ 手寫筆記';
+    display: block;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    color: var(--gold);
+    font-family: 'Noto Sans TC', sans-serif;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+  }
+  .note-card .red   { color: var(--red-note); font-weight: 600; }
+  .note-card .blue  { color: var(--blue-note); font-weight: 600; }
+  .note-card .green { color: var(--green-note); font-weight: 600; }
+  .note-card .hi    { background: rgba(255,220,0,0.35); padding: 0 3px; border-radius: 2px; }
+
+  /* ── INFO BOX ── */
+  .info-box {
+    background: var(--paper);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 1.2rem 1.4rem;
+    margin: 1.2rem 0;
+  }
+  .info-box.sage   { border-color: var(--sage); background: #f0f6f2; }
+  .info-box.mist   { border-color: var(--mist); background: #f0f4f8; }
+  .info-box.clay   { border-color: var(--clay); background: #f8f2ec; }
+  .info-box.rose   { border-color: var(--rose); background: #f8f0f0; }
+  .info-box h4 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 0.6rem;
+    color: var(--sage-dk);
+  }
+  .info-box.mist h4 { color: var(--mist-dk); }
+  .info-box.clay h4 { color: var(--clay); }
+  .info-box.rose h4 { color: var(--rose); }
+
+  /* ── TABLE ── */
+  .table-wrap { overflow-x: auto; margin: 1.2rem 0; }
+  table {
+    width: 100%; border-collapse: collapse;
+    font-size: 0.85rem;
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  th {
+    background: var(--sage);
+    color: #fff;
+    padding: 0.7rem 1rem;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.82rem;
+    letter-spacing: 0.04em;
+  }
+  td { padding: 0.55rem 1rem; border-bottom: 1px solid var(--border); text-align: center; }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: var(--bg2); }
+  tr:hover td { background: #e8f2ec; }
+  td.formula { font-family: 'JetBrains Mono', monospace; font-size: 0.82rem; }
+  td.hi-pos  { color: var(--red-note); font-weight: 700; }
+  td.hi-neg  { color: var(--blue-note); font-weight: 700; }
+
+  /* ── EVIDENCE LIST ── */
+  .evidence-list { list-style: none; margin: 1rem 0; }
+  .evidence-list li {
+    display: flex;
+    gap: 1rem;
+    padding: 0.9rem 1.1rem;
+    margin-bottom: 0.6rem;
+    background: var(--paper);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+  }
+  .evidence-list li:hover { border-color: var(--sage); background: #f0f6f2; }
+  .evidence-list li.open { border-color: var(--sage); background: #f0f6f2; }
+  .ev-num {
+    background: var(--sage);
+    color: #fff;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+    font-size: 0.85rem;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+  .ev-body { flex: 1; }
+  .ev-title { font-weight: 600; font-size: 0.93rem; }
+  .ev-detail {
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.35s ease;
+    font-size: 0.88rem;
+    color: var(--ink-light);
+    line-height: 1.75;
+  }
+  .evidence-list li.open .ev-detail { max-height: 300px; margin-top: 0.5rem; }
+  .ev-arrow {
+    font-size: 0.8rem;
+    color: var(--ink-light);
+    transition: transform 0.3s;
+    margin-top: 0.3rem;
+  }
+  .evidence-list li.open .ev-arrow { transform: rotate(90deg); }
+
+  /* ── MECHANISM DIAGRAM ── */
+  .mech-box {
+    background: var(--paper);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 1.4rem;
+    margin: 1.2rem 0;
+    overflow-x: auto;
+  }
+  .mech-box h4 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--sage-dk);
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .mech-steps {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  .mech-step {
+    background: var(--bg2);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 0.7rem 1rem;
+    text-align: center;
+    font-size: 0.82rem;
+    min-width: 100px;
+    transition: all 0.2s;
+  }
+  .mech-step:hover { border-color: var(--sage); background: #e8f2ec; }
+  .mech-step .formula {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--sage-dk);
+    margin-bottom: 0.3rem;
+    word-break: break-all;
+  }
+  .mech-step .label { font-size: 0.72rem; color: var(--ink-light); }
+  .mech-arrow {
+    color: var(--sage);
+    font-size: 1.3rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .mech-arrow.slow { color: var(--red-note); }
+  .mech-arrow.fast { color: var(--green-note); }
+  .arrow-label { font-size: 0.7rem; text-align: center; }
+
+  /* ── SVG DIAGRAMS ── */
+  .diagram-svg {
+    background: var(--paper);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 1.2rem;
+    margin: 1.2rem 0;
+    text-align: center;
+  }
+  .diagram-svg h4 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--sage-dk);
+    margin-bottom: 0.8rem;
+  }
+
+  /* ── QUIZ ── */
+  .quiz-card {
+    background: var(--paper);
+    border: 2px solid var(--mist);
+    border-radius: 10px;
+    padding: 1.4rem;
+    margin: 1.5rem 0;
+  }
+  .quiz-card h4 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--mist-dk);
+    margin-bottom: 1rem;
+  }
+  .quiz-q { font-size: 0.92rem; margin-bottom: 0.8rem; font-weight: 500; }
+  .quiz-opts { display: flex; flex-direction: column; gap: 0.5rem; }
+  .quiz-opt {
+    padding: 0.65rem 1rem;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.88rem;
+    transition: all 0.2s;
+    background: var(--bg);
+  }
+  .quiz-opt:hover { border-color: var(--mist); background: #f0f4f8; }
+  .quiz-opt.correct { border-color: var(--sage); background: #e8f5ee; color: var(--sage-dk); font-weight: 600; }
+  .quiz-opt.wrong   { border-color: var(--rose); background: #fdf0f0; color: var(--rose); }
+  .quiz-feedback {
+    margin-top: 0.8rem;
+    font-size: 0.88rem;
+    padding: 0.7rem 1rem;
+    border-radius: 6px;
+    display: none;
+  }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.ok { background: #e8f5ee; color: var(--sage-dk); border: 1px solid var(--sage); }
+  .quiz-feedback.no { background: #fdf0f0; color: var(--rose); border: 1px solid var(--rose); }
+
+  /* ── LFER INTERACTIVE ── */
+  .lfer-canvas-wrap {
+    background: var(--paper);
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    padding: 1.2rem;
+    margin: 1.2rem 0;
+    text-align: center;
+  }
+  canvas#lferCanvas {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: #fafaf8;
+    max-width: 100%;
+  }
+
+  /* ── STEREOCHEM TABS ── */
+  .tabs {
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 1.2rem 0;
+    background: var(--paper);
+  }
+  .tab-buttons {
+    display: flex;
+    border-bottom: 1.5px solid var(--border);
+    background: var(--bg2);
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-family: 'Noto Sans TC', sans-serif;
+    color: var(--ink-light);
+    border-bottom: 3px solid transparent;
+    margin-bottom: -1.5px;
+    transition: all 0.2s;
+  }
+  .tab-btn.active {
+    color: var(--sage-dk);
+    border-bottom-color: var(--sage);
+    background: var(--paper);
+    font-weight: 600;
+  }
+  .tab-content { display: none; padding: 1.2rem 1.4rem; }
+  .tab-content.active { display: block; }
+
+  /* ── SNCB FLOW ── */
+  .sncb-flow {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    margin: 1rem 0;
+  }
+  .sncb-step {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    padding: 0.9rem 1.1rem;
+    background: var(--bg2);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    font-size: 0.88rem;
+  }
+  .sncb-step .step-num {
+    background: var(--clay);
+    color: #fff;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+    font-size: 0.8rem;
+    flex-shrink: 0;
+  }
+  .sncb-step .step-body { flex: 1; }
+  .sncb-step .step-rate {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+  .step-rate.equil { background: #e8f0f8; color: var(--blue-note); }
+  .step-rate.slow  { background: #fdeaea; color: var(--red-note); }
+  .step-rate.fast  { background: #eaf5ec; color: var(--green-note); }
+
+  /* ── COMPARE CARD ── */
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+  @media (max-width: 600px) { .compare-grid { grid-template-columns: 1fr; } }
+  .compare-card {
+    background: var(--paper);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 1.1rem;
+    font-size: 0.88rem;
+  }
+  .compare-card h5 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    margin-bottom: 0.7rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .compare-card.dissoc h5 { color: var(--red-note); border-color: var(--rose); }
+  .compare-card.assoc  h5 { color: var(--blue-note); border-color: var(--mist); }
+  .compare-card ul { list-style: none; }
+  .compare-card ul li { padding: 0.3rem 0; display: flex; gap: 0.5rem; }
+  .compare-card ul li::before { content: '→'; color: var(--sage); flex-shrink: 0; }
+
+  /* ── PATHWAY BOX ── */
+  .pathway-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin: 1rem 0;
+  }
+  @media (max-width: 650px) { .pathway-grid { grid-template-columns: 1fr; } }
+  .pathway-card {
+    background: var(--paper);
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 1rem;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .pathway-card:hover { border-color: var(--sage); transform: translateY(-2px); box-shadow: 0 4px 12px var(--shadow); }
+  .pathway-card h5 {
+    font-family: 'Noto Serif TC', serif;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--sage-dk);
+    font-size: 0.88rem;
+  }
+  .pathway-card .pathway-label {
+    font-size: 0.72rem;
+    background: var(--bg2);
+    display: inline-block;
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+    margin-bottom: 0.5rem;
+    color: var(--ink-light);
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  /* ── SUMMARY BOX ── */
+  .summary-box {
+    background: linear-gradient(135deg, #2c2a24 0%, #3d3a30 100%);
+    color: #f5f2eb;
+    border-radius: 12px;
+    padding: 1.6rem 1.8rem;
+    margin: 2rem 0;
+  }
+  .summary-box h3 {
+    font-family: 'Noto Serif TC', serif;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    color: var(--gold-lt);
+  }
+  .summary-box ul { list-style: none; }
+  .summary-box ul li {
+    padding: 0.4rem 0;
+    font-size: 0.9rem;
+    display: flex;
+    gap: 0.8rem;
+    color: rgba(245,242,235,0.85);
+  }
+  .summary-box ul li::before { content: '✦'; color: var(--gold-lt); flex-shrink: 0; }
+
+  /* ── PROGRESS ── */
+  .progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 3px;
+    background: var(--sage);
+    z-index: 999;
+    transition: width 0.2s;
+  }
+
+  /* ── MATH ── */
+  .math {
+    font-family: 'JetBrains Mono', monospace;
+    background: var(--bg2);
+    padding: 0.8rem 1.2rem;
+    border-radius: 6px;
+    border-left: 3px solid var(--sage);
+    margin: 0.8rem 0;
+    font-size: 0.88rem;
+    overflow-x: auto;
+    white-space: pre;
+  }
+
+  /* ── DIVIDER ── */
+  .section-divider {
+    border: none;
+    height: 1px;
+    background: var(--border);
+    margin: 2.5rem 0;
+  }
+
+  /* ── TOOLTIP ── */
+  [data-tip] {
+    border-bottom: 1px dotted var(--sage);
+    cursor: help;
+    color: var(--sage-dk);
+    font-weight: 500;
+  }
+
+  /* back-to-top */
+  #backTop {
+    position: fixed; bottom: 2rem; right: 2rem;
+    background: var(--sage);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 44px; height: 44px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 3px 12px var(--shadow);
+    transition: all 0.2s;
+    opacity: 0;
+    pointer-events: none;
+  }
+  #backTop.show { opacity: 1; pointer-events: auto; }
+  #backTop:hover { background: var(--sage-dk); transform: translateY(-3px); }
 </style>
 </head>
 <body>
+
 <div class="progress-bar" id="progressBar"></div>
+
 <header>
+  <div class="chapter-tag">CH 12.4 — 12.5.2</div>
   <h1>八面體取代反應：實驗證據與立體化學</h1>
-  <p>Experimental Evidence in Octahedral Substitution</p>
+  <p>Experimental Evidence in Octahedral Substitution & Stereochemistry of Reactions</p>
 </header>
+
 <nav class="toc">
-  <a href="#s1241">12.4.1 解離機制</a>
-  <a href="#s1244">12.4.4 SN₁CB</a>
-  <a href="#s125">12.5 立體化學</a>
+  <a href="#s124" data-section="s124">12.4 實驗證據</a>
+  <a href="#s1241" data-section="s1241">12.4.1 解離機制</a>
+  <a href="#s1242" data-section="s1242">12.4.2 LFER</a>
+  <a href="#s1243" data-section="s1243">12.4.3 締合機制</a>
+  <a href="#s1244" data-section="s1244">12.4.4 SN₁CB</a>
+  <a href="#s1245" data-section="s1245">12.4.5 螯合效應</a>
+  <a href="#s125" data-section="s125">12.5 立體化學</a>
+  <a href="#s1251" data-section="s1251">12.5.1 trans取代</a>
+  <a href="#s1252" data-section="s1252">12.5.2 cis取代</a>
 </nav>
+
 <main>
-  <section class="section" id="s1241">
-    <div class="section-header"><span class="section-num">12.4.1</span><div class="section-title">解離機制與 LFAE</div></div>
-    <p>在解離機制中，配合物失去一個配體形成五配位過渡態。<strong>配位場活化能 (LFAE)</strong> 是判斷反應速率的關鍵。</p>
-    <div class="note-card">
-      根據你的研究，<span style="color:var(--red-note)">d³</span> 與 <span style="color:var(--red-note)">Low-spin d⁴, d⁵, d⁶</span> 的 LFAE 為正值，因此這些配合物在動力學上是惰性 (inert) 的。
+
+<!-- ════════════════════════════════════════════════════ -->
+<!-- 12.4 OVERVIEW -->
+<!-- ════════════════════════════════════════════════════ -->
+<section class="section" id="s124">
+  <div class="section-header">
+    <span class="section-num">12.4</span>
+    <div>
+      <div class="section-title">八面體取代的實驗證據</div>
+      <div class="section-subtitle">Experimental Evidence in Octahedral Substitution</div>
     </div>
-  </section>
-  <section class="section" id="s1244">
-    <div class="section-header"><span class="section-num">12.4.4</span><div class="section-title">共軛鹼機制 (SN₁CB)</div></div>
-    <p>SN₁CB 反應雖然表現出二階動力學，但本質上是單分子解離反應。OH⁻ 的作用是奪取質子形成共軛鹼。</p>
-  </section>
+  </div>
+
+  <p class="prose">
+    八面體錯合物的取代反應，依其機制可分為
+    <strong>解離（D / I<sub>d</sub>）</strong>、
+    <strong>締合（A / I<sub>a</sub>）</strong>，以及
+    <strong>交換（I）</strong>型。
+    本章節重點在於整理各種實驗方法，以判斷真實反應究竟走哪條路徑。
+  </p>
+
+  <div class="note-card">
+    整個 12.4 章節的核心問題是：<br>
+    <span class="hi">「我們怎麼從實驗數據判斷一個反應是 D/I<sub>d</sub> 還是 A/I<sub>a</sub> 機制？」</span><br><br>
+    手寫筆記提醒：判斷機制需要<span class="red">多項證據</span>綜合，不能靠單一實驗。<br>
+    簡報中五個支持 D 機制的證據、以及 LFER、締合機制的特徵，都要記熟。
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ════════════════════════════════════════════════════ -->
+<!-- 12.4.1 解離 -->
+<!-- ════════════════════════════════════════════════════ -->
+<section class="section" id="s1241">
+  <div class="section-header">
+    <span class="section-num">12.4.1</span>
+    <div>
+      <div class="section-title">解離機制</div>
+      <div class="section-subtitle">Dissociation — Ligand Field Effect & Electronic/Steric Factors</div>
+    </div>
+  </div>
+
+  <p class="prose">
+    在解離機制中，八面體錯合物先<strong>失去一個配基 X</strong>，形成五配位過渡態（方錐形 SP 或三角雙錐形 TBP），再由新配基 Y 填入空位。
+  </p>
+
+  <!-- LFAE -->
+  <div class="info-box sage">
+    <h4>⚡ 配位場活化能 LFAE（Ligand Field Activation Energy）</h4>
+    <p style="font-size:0.9rem">
+      LFAE = <strong>方錐形（SP）過渡態的 LFSE</strong> − <strong>八面體反應物的 LFSE</strong><br>
+      <br>
+      • LFAE <span style="color:var(--red-note);font-weight:700">正值越大</span> → 活化能高 → 解離越<strong>困難</strong>（inert）<br>
+      • LFAE <span style="color:var(--blue-note);font-weight:700">負值</span> → 活化能低 → 解離容易（labile）
+    </p>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>電子組態</th>
+          <th>Oh LFSE (強場)</th>
+          <th>SP LFSE (強場)</th>
+          <th>LFAE (強場)</th>
+          <th>Oh LFSE (弱場)</th>
+          <th>LFAE (弱場)</th>
+          <th>分類</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="formula">d³</td><td>−1.200</td><td>−1.000</td><td class="hi-pos">+0.200</td><td>−1.200</td><td class="hi-pos">+0.200</td><td>inert</td></tr>
+        <tr><td class="formula">d⁴ (LS)</td><td>−1.600</td><td>−0.914</td><td class="hi-pos">+0.686</td><td>−0.600</td><td>−0.314</td><td>inert(LS)</td></tr>
+        <tr><td class="formula">d⁵ (LS)</td><td>−2.000</td><td>−1.371</td><td class="hi-pos">+0.629</td><td>0</td><td>0</td><td>inert(LS)</td></tr>
+        <tr><td class="formula">d⁶ (LS)</td><td>−2.400</td><td>−1.828</td><td class="hi-pos">+0.572</td><td>−0.400</td><td>−0.057</td><td>inert(LS)</td></tr>
+        <tr><td class="formula">d⁷</td><td>−1.800</td><td>−1.914</td><td class="hi-neg">−0.114</td><td>−0.800</td><td class="hi-neg">−0.114</td><td>labile</td></tr>
+        <tr><td class="formula">d⁸</td><td>−1.200</td><td>−1.828</td><td class="hi-neg">−0.628</td><td>−1.200</td><td class="hi-pos">+0.200</td><td>—</td></tr>
+        <tr><td class="formula">d⁹</td><td>−0.600</td><td>−0.914</td><td class="hi-neg">−0.314</td><td>−0.600</td><td class="hi-neg">−0.314</td><td>labile</td></tr>
+        <tr><td class="formula">d¹⁰</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>labile</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="note-card">
+    <span class="red">重點！</span> d³、low-spin d⁴/d⁵/d⁶ 的 LFAE 為<span class="red">正值</span>（尤其 d⁴ 強場高達 +0.686）<br>
+    → 這些配置對應惰性錯合物（inert），如 Co(III)、Cr(III)<br><br>
+    <span class="green">d⁷, d⁹, d¹⁰</span> 的 LFAE 為負值 → labile（活潑），解離容易<br><br>
+    <span class="hi">d⁸ 比較特殊</span>：強場下 LFAE = −0.628（負！），但 d⁸ 通常形成<span class="blue">平面四方形</span>而非八面體，所以這個分析在 d⁸ 效果不佳。
+  </div>
+
+  <!-- 電子和空間效應 -->
+  <div class="info-box clay">
+    <h4>🔬 電子效應與空間效應（Electronic & Steric Factors）</h4>
+    <p style="font-size:0.88rem; line-height:1.9">
+      以下兩個規律均源自「<strong>金屬與配基間靜電吸引力</strong>越大，解離越慢」：<br><br>
+      <strong>1. 中心離子氧化態↑</strong> → 解離速率↓（更難離去）<br>
+      &emsp;例：[AlF₆]³⁻ &gt; [SiF₆]²⁻ &gt; [PF₆]⁻ &gt; SF₆（3+→4+→5+→6+，速率依次遞減）<br><br>
+      <strong>2. 離子半徑↑</strong>（半徑越小越慢）<br>
+      &emsp;例：[Sr(H₂O)₆]²⁺ &gt; [Ca(H₂O)₆]²⁺ &gt; [Mg(H₂O)₆]²⁺（112pm→99pm→66pm）<br><br>
+      <strong>例外：</strong>第一列過渡金屬的 [M(H₂O)₆]²⁺ 雖然半徑小，但半衰期均 &lt;1 秒（labile），<br>
+      這是因為<span style="color:var(--red-note);font-weight:600">電子組態</span>（LFAE 負值）主導，而非離子半徑。
+    </p>
+  </div>
+
+  <p class="prose">
+    以下是支持<strong>解離機制（D / I<sub>d</sub>）</strong>的五大實驗證據（點擊展開詳細說明）：
+  </p>
+
+  <ul class="evidence-list" id="dissocEvidence">
+    <li onclick="toggleEv(this)">
+      <div class="ev-num">1</div>
+      <div class="ev-body">
+        <div class="ev-title">速率常數對不同 Y 變化不大（&lt;10倍）</div>
+        <div class="ev-detail">
+          若解離是速率決定步驟（rds），則進入配基 Y 的種類不應影響速率。<br>
+          實驗：[Co(NH₃)₅(H₂O)]³⁺ 與各種陰離子反應，k₁ 值相差不超過一個數量級（N₃⁻: 100, SO₄²⁻: 24, Cl⁻: 21, NCS⁻: 16 × 10⁻⁶ s⁻¹）。<br>
+          → 符合 D 機制特徵。
+        </div>
+      </div>
+      <div class="ev-arrow">▶</div>
+    </li>
+    <li onclick="toggleEv(this)">
+      <div class="ev-num">2</div>
+      <div class="ev-body">
+        <div class="ev-title">錯合物電荷↑ → 取代速率↓</div>
+        <div class="ev-detail">
+          反應物電荷越正，金屬-配基靜電吸引力越強，配基越難解離。<br>
+          → 支持「M-L 鍵斷裂是速率決定步」（D 機制邏輯）。
+        </div>
+      </div>
+      <div class="ev-arrow">▶</div>
+    </li>
+    <li onclick="toggleEv(this)">
+      <div class="ev-num">3</div>
+      <div class="ev-body">
+        <div class="ev-title">空間擁擠（steric crowding）↑ → 解離速率↑</div>
+        <div class="ev-detail">
+          配基擁擠時，某一配基被「推出去」更容易，有利於解離。<br>
+          <strong>注意對比：</strong>若為 A 或 I<sub>a</sub> 機制，空間擁擠反而會阻礙新配基進入，速率↓。<br>
+          → 速率↑ 支持 D，速率↓ 支持 A。
+        </div>
+      </div>
+      <div class="ev-arrow">▶</div>
+    </li>
+    <li onclick="toggleEv(this)">
+      <div class="ev-num">4</div>
+      <div class="ev-body">
+        <div class="ev-title">速率與 M-L 鍵強度呈線性自由能關係（LFER）</div>
+        <div class="ev-detail">
+          離去基（X）與金屬的鍵越強，解離越慢，log k 與 log K 呈<strong>線性關係</strong>。<br>
+          → 熱力學參數（鍵強度）主導動力學（速率常數），符合 D 機制（詳見 12.4.2）。
+        </div>
+      </div>
+      <div class="ev-arrow">▶</div>
+    </li>
+    <li onclick="toggleEv(this)">
+      <div class="ev-num">5</div>
+      <div class="ev-body">
+        <div class="ev-title">活化體積 ΔV‡ 為正值</div>
+        <div class="ev-detail">
+          D 機制：一個物種分裂為兩個 → 體積膨脹 → <strong>ΔV‡ &gt; 0</strong><br>
+          A 機制：兩個物種合併為一個 → 體積縮小 → <strong>ΔV‡ &lt; 0</strong><br>
+          → 可通過改變壓力測量速率常數的變化來判斷。<br>
+          注意：高電荷離子的溶劑化效應可能干擾結果，需謹慎詮釋。
+        </div>
+      </div>
+      <div class="ev-arrow">▶</div>
+    </li>
+  </ul>
+
+  <!-- Quiz 1 -->
+  <div class="quiz-card">
+    <h4>🧪 小測驗：LFAE 判斷</h4>
+    <div class="quiz-q">哪個電子組態的 d 錯合物（強場）LFAE 最大（最惰性）？</div>
+    <div class="quiz-opts">
+      <div class="quiz-opt" onclick="answerQuiz(this,'wrong','q1')">d³ (LFAE = +0.200)</div>
+      <div class="quiz-opt" onclick="answerQuiz(this,'correct','q1')">d⁴ low-spin (LFAE = +0.686)</div>
+      <div class="quiz-opt" onclick="answerQuiz(this,'wrong','q1')">d⁶ low-spin (LFAE = +0.572)</div>
+      <div class="quiz-opt" onclick="answerQuiz(this,'wrong','q1')">d⁹ (LFAE = −0.314)</div>
+    </div>
+    <div class="quiz-feedback" id="fb-q1"></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ════════════════════════════════════════════════════ -->
+<!-- 12.4.2 LFER -->
+<!-- ════════════════════════════════════════════════════ -->
+<section class="section" id="s1242">
+  <div class="section-header">
+    <span class="section-num">12.4.2</span>
+    <div>
+      <div class="section-title">線性自由能關係（LFER）</div>
+      <div class="section-subtitle">Linear Free-Energy Relationships</div>
+    </div>
+  </div>
+
+  <p class="prose">
+    當<strong>M-L 鍵強度（熱力學參數）</strong>是決定解離速率的主要因素時，
+    動力學與熱力學之間會出現線性相關性。
+  </p>
+
+  <div class="math">反應：[ML₅X]ⁿ⁺ + Y  ⇌  [ML₅Y]ᵐ⁺ + X
+
+log k（速率常數） vs. log K（平衡常數）呈線性 → LFER 成立
+
+數學依據：
+  ln k = ln A − Eₐ/RT       （Arrhenius 方程）
+  ln K = ΔS°/R − ΔH°/RT    （van't Hoff 方程）
+
+若一系列反應的 A 和 ΔS° 相近，且 Eₐ ∝ ΔH°，則 ln k ∝ ln K</div>
+
+  <div class="note-card">
+    LFER 的<span class="red">直覺理解</span>：<br>
+    X 離去基與金屬的鍵越強（K 越小，熱力學上越難被取代），<br>
+    解離也越慢（k 越小），因此 <span class="hi">log k 和 log K 線性正相關</span>。<br><br>
+    <span class="green">重要！</span> LFER 是<span class="blue">間接證明</span>反應機制的工具——<br>
+    若 log-log 圖是直線，說明<span class="red">熱力學鍵強度主導了動力學速率</span>，<br>
+    這正是解離機制的核心特徵（M-X 鍵斷裂是 rds）。
+  </div>
+
+  <!-- Interactive LFER graph -->
+  <div class="lfer-canvas-wrap">
+    <h4 style="text-align:left;font-family:'Noto Serif TC',serif;font-size:0.9rem;color:var(--sage-dk);margin-bottom:0.8rem">
+      📊 [Co(NH₃)₅X]²⁺ 水解的 LFER 示意圖（互動）
+    </h4>
+    <canvas id="lferCanvas" width="480" height="300"></canvas>
+    <p style="font-size:0.78rem;color:var(--ink-light);margin-top:0.5rem">
+      ← 將游標移到點上查看數據；x 軸 = log K<sub>eq</sub>，y 軸 = log k
+    </p>
+  </div>
+
+  <div class="info-box mist">
+    <h4>📋 [Ni(H₂O)₆]²⁺ 的取代反應：Pre-association 機制</h4>
+    <p style="font-size:0.88rem;line-height:1.9">
+      對 [Ni(H₂O)₆]²⁺ 而言，k₂ 值對不同配基 Y 差異不大（在 5 倍以內），
+      且接近水交換的速率常數。<br>
+      但 K₁（離子對形成常數）差異顯著 — <em>反應速率主要受離子對形成（K₁）影響</em>。<br>
+      → 符合 <strong>pre-association（預締合）機制</strong>（也稱 I<sub>d</sub> 機制的一種）
+    </p>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ════════════════════════════════════════════════════ -->
+<!-- 12.4.3 締合 -->
+<!-- ════════════════════════════════════════════════════ -->
+<section class="section" id="s1243">
+  <div class="section-header">
+    <span class="section-num">12.4.3</span>
+    <div>
+      <div class="section-title">締合機制</div>
+      <div class="section-subtitle">Associative Mechanisms — less common in octahedral complexes</div>
+    </div>
+  </div>
+
+  <p class="prose">
+    締合反應在八面體錯合物中<strong>較不常見</strong>（因為八面體中心已有六個配基，空間限制大）。
+    但在某些特殊情況下，仍可觀察到 I<sub>a</sub> 或 A 的特徵。
+  </p>
+
+  <div class="compare-grid">
+    <div class="compare-card dissoc">
+      <h5>📤 解離型 I<sub>d</sub>（[Cr(NH₃)₅(H₂O)]³⁺）</h5>
+      <ul>
+        <li>不同 Y 的速率常數相差 &lt;6 倍</li>
+        <li>進入配基影響小</li>
+        <li>ΔS‡ 近零或正值</li>
+        <li>NH₃ 提供較多電子密度→ Cr 中心較富電子→ 對新親核試劑不敏感</li>
+      </ul>
+    </div>
+    <div class="compare-card assoc">
+      <h5>📥 締合型 I<sub>a</sub>（[Cr(H₂O)₆]³⁺）</h5>
+      <ul>
+        <li>不同 Y 的速率常數相差 &gt;2000 倍</li>
+        <li>進入配基影響大</li>
+        <li>ΔS‡ 為負值（有序化的過渡態）</li>
+        <li>H₂O 提供電子密度少→ Cr 中心缺電子→ 對親核試劑敏感</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note-card">
+    關鍵概念：<span class="hi">e⁻ 密度決定機制！</span><br>
+    NH₃ 的 e⁻ 捐贈能力 &gt; H₂O → [Cr(NH₃)₅(H₂O)]³⁺ 中 Cr 電子密度較高<br>
+    → 對新配基的靜電吸引力降低 → 傾向<span class="red">解離型 I<sub>d</sub></span><br><br>
+    相比之下，[Cr(H₂O)₆]³⁺ 中 Cr 的電子密度低 → 對親核配基敏感 → <span class="blue">締合型 I<sub>a</sub></span><br><br>
+    <span class="green">Ru(II) vs Ru(III)</span> 也是同理：<br>
+    Ru(III) → I<sub>a</sub>（△S‡ 負，速率隨 Y 大幅變化）<br>
+    Ru(II) → I<sub>d</sub>（速率對 Y 不敏感），可能因負電荷增加→ Ru-OH₂ 鍵減弱→ 傾向解離
+  </div>
+
+  <!-- Quiz 2 -->
+  <div class="quiz-card">
+    <h4>🧪 小測驗：機制判斷</h4>
+    <div class="quiz-q">
+      某反應中，更換不同進入配基 Y 後，速率常數相差超過 1000 倍。這最可能指向哪種機制？
+    </div>
+    <div class="quiz-opts">
+      <div class="quiz-opt" onclick="answerQuiz(this,'wrong','q2')">D（解離）機制</div>
+      <div class="quiz-opt" onclick="answerQuiz(this,'wrong','q2')">I<sub>d</sub>（解離型交換）機制</div>
+      <div class="quiz-opt" onclick="answerQuiz(this,'correct','q2')">I<sub>a</sub>（締合型交換）機制</div>
+      <div class="quiz-opt" onclick="answerQuiz(this,'wrong','q2')">與機制無關</div>
+    </div>
+    <div class="quiz-feedback" id="fb-q2"></div>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ════════════════════════════════════════════════════ -->
+<!-- 12.4.4 SN1CB -->
+<!-- ════════════════════════════════════════════════════ -->
+<section class="section" id="s1244">
+  <div class="section-header">
+    <span class="section-num">12.4.4</span>
+    <div>
+      <div class="section-title">共軛鹼機制 SN₁CB</div>
+      <div class="section-subtitle">The Conjugate Base Mechanism</div>
+    </div>
+  </div>
+
+  <p class="prose">
+    某些顯示<strong>二階動力學（second-order kinetics）</strong>的反應，表面上像締合機制（OH⁻ 參與），
+    實際上卻是<strong>單分子解離（D 機制）</strong>的本質，但需要先去質子化形成共軛鹼。
+  </p>
+
+  <div class="info-box rose">
+    <h4>⚠️ SN₁CB 的迷人陷阱</h4>
+    <p style="font-size:0.88rem;line-height:1.9">
+      看到「速率 ∝ [OH⁻]」時，不要立即以為是 A 機制（OH⁻ 直接進攻）！<br>
+      SN₁CB 的 OH⁻ 扮演的是<strong>鹼催化去質子化</strong>的角色，不是親核試劑。<br>
+      真正的 rds 是 X⁻ <strong>解離</strong>（單分子）。
+    </p>
+  </div>
+
+  <div class="mech-box">
+    <h4>SN₁CB 反應步驟（以 [Co(NH₃)₅X]²⁺ 為例）</h4>
+    <div class="sncb-flow">
+      <div class="sncb-step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>去質子化平衡</strong>：OH⁻ 從 NH₃ 配基上奪走 H⁺，形成 amido 中間體<br>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:0.82rem">
+            [Co(NH₃)₅X]²⁺ + OH⁻ ⇌ [Co(NH₃)₄(NH₂)X]⁺ + H₂O
+          </span>
+        </div>
+        <div class="step-rate equil">fast equilibrium</div>
+      </div>
+      <div class="sncb-step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>解離（rds）</strong>：共軛鹼（CB = amido 錯合物）失去 X⁻ → 5 配位中間體<br>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:0.82rem">
+            [Co(NH₃)₄(NH₂)X]⁺ → [Co(NH₃)₄(NH₂)]²⁺ + X⁻
+          </span><br>
+          <small style="color:var(--red-note)">通常是 X 的 trans 位置上的氮被去質子化，有利於此步驟</small>
+        </div>
+        <div class="step-rate slow">slow (rds)</div>
+      </div>
+      <div class="sncb-step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>快速加水</strong>：H₂O 填入空位，恢復六配位<br>
+          <span style="font-family:'JetBrains Mono',monospace;font-size:0.82rem">
+            [Co(NH₃)₄(NH₂)]²⁺ + H₂O → [Co(NH₃)₅(OH)]²⁺
+          </span>
+        </div>
+        <div class="step-rate fast">fast</div>
+      </div>
+    </div>
+    <div class="math">整體：[Co(NH₃)₅X]²⁺ + OH⁻ → [Co(NH₃)₅(OH)]²⁺ + X⁻
+
+速率方程推導：
+  K_h = Ka/Kw = [Co(NH₃)₄(NH₂)X⁺] / ([Co(NH₃)₅X]²⁺ [OH⁻])
+  rate = k · [Co(NH₃)₄(NH₂)X⁺]
+       = k · (Ka/Kw) · [Co(NH₃)₅X]²⁺ · [OH⁻]
+  ∴ 二階動力學，但本質是 D 機制！</div>
+  </div>
+
+  <div class="note-card">
+    <span class="red">為什麼 Co(III) 特別容易走 SN₁CB？</span><br>
+    → Low-spin Co(III) 半徑小，Lewis 酸性強，可以通過 π 相互作用穩定五配位中間體！<br><br>
+    <span class="blue">Trans 位效應</span>：被去質子化的 N 通常在 X 的 trans 位，<br>
+    因為 amido 基團作為 σ/π donor，可以穩定 Co(III) 的過渡態。<br>
+    實驗：[Co(tren)(NH₃)Cl]²⁺ 中，<span class="hi">離去基 trans 到去質子化 N 的異構物比 cis 的快 10⁴ 倍</span>。
+  </div>
+
+  <!-- SN1CB 四大證據 -->
+  <p class="prose"><strong>SN₁CB 的四大實驗證據</strong>（點擊展開）：</p>
+  <ul class="evidence-list">
+    <li onclick="toggleEv(this)">
+      <div class="ev-num" style="background:var(--clay)">1</div>
+      <div class="ev-body">
+        <div class="ev-title">胺基氫的鹼催化交換（Base-catalyzed H exchange）</div>
+        <div class="ev-detail">
+          直接證明去質子化平衡（步驟一）存在。NH 氫可以被鹼催化交換，
+          證明 amido 中間體確實會形成。
+        </div>
+      </div>
+      <div class="ev-arrow">▶</div>
+    </li>
+    <li onclick="toggleEv(this)">
+      <div class="ev-num" style="background:var(--clay)">2</div>
+      <div class="ev-body">
+        <div class="ev-title">¹⁸O 同位素標記</div>
+        <div class="ev-detail">
+          在 ¹⁸O 富集水中反應，產物的 ¹⁸O/¹⁶O 比例 = 溶劑的比例，與離去基種類無關。<br>
+          → 若是 A 機制，水在 rds 中進入，¹⁸O 比例應高於溶劑。<br>
+          → 實驗結果說明水在 rds 之後才進入 → 排除締合機制。
+        </div>
+      </div>
+      <div class="ev-arrow">▶</div>
+    </li>
+    <li onclick="toggleEv(this)">
+      <div class="ev-num" style="background:var(--clay)">3</div>
+      <div class="ev-body">
+        <div class="ev-title">RNH₂ 比 NH₃ 複合物反應更快</div>
+        <div class="ev-detail">
+          空間擁擠（R 基）反而加速反應。<br>
+          → 若是締合機制，空間擁擠應該阻礙 Y 進入，速率↓。<br>
+          → 速率↑ 說明解離機制（空間擁擠有助於配基被推出去）。
+        </div>
+      </div>
+      <div class="ev-arrow">▶</div>
+    </li>
+    <li onclick="toggleEv(this)">
+      <div class="ev-num" style="background:var(--clay)">4</div>
+      <div class="ev-body">
+        <div class="ev-title">LFER：ln k_OH 對 ln K_OH 呈線性</div>
+        <div class="ev-detail">
+          離去基鍵強度決定速率 → 確認解離（M-X 鍵斷裂）為 rds。
+        </div>
+      </div>
+      <div class="ev-arrow">▶</div>
+    </li>
+  </ul>
+</section>
+
+<hr class="section-divider">
+
+<!-- ════════════════════════════════════════════════════ -->
+<!-- 12.4.5 螯合效應 -->
+<!-- ════════════════════════════════════════════════════ -->
+<section class="section" id="s1245">
+  <div class="section-header">
+    <span class="section-num">12.4.5</span>
+    <div>
+      <div class="section-title">動力學螯合效應</div>
+      <div class="section-subtitle">The Kinetic Chelate Effect</div>
+    </div>
+  </div>
+
+  <p class="prose">
+    螯合配基（多牙配基）的取代反應通常<strong>比類似的單牙配基慢</strong>。
+    這稱為動力學螯合效應（kinetic chelate effect）。
+  </p>
+
+  <div class="info-box sage">
+    <h4>🔗 為什麼螯合配基難以被取代？</h4>
+    <p style="font-size:0.88rem;line-height:1.9">
+      <strong>原因一：</strong>移除螯合配基第一個鍵結點的 ΔH 比單牙配基更大（多牙配基整體結合更穩）<br><br>
+      <strong>原因二（更重要！）：</strong>即使第一個鍵結點斷開了，<br>
+      剩餘部分的鏈段仍然把「懸空」的配位原子<strong>固定在金屬附近</strong>，<br>
+      使得「重新鍵結」（reattachment）的動力學障壁<em>非常低</em>，<br>
+      比單牙配基更容易重新連上去。<br><br>
+      → 淨效果：<span style="color:var(--red-note);font-weight:600">整體解離（aquation）速率大幅降低</span>
+    </p>
+  </div>
+
+  <div class="mech-box">
+    <h4>乙二胺（en）螯合配基取代的四步驟（aquation）</h4>
+    <div class="sncb-flow">
+      <div class="sncb-step">
+        <div class="step-num">1</div>
+        <div class="step-body">第一個 N 解離（慢）→ 懸空臂，但靠近金屬</div>
+        <div class="step-rate slow">slow</div>
+      </div>
+      <div class="sncb-step">
+        <div class="step-num">2</div>
+        <div class="step-body">H₂O 快速進入空位（快）</div>
+        <div class="step-rate fast">fast</div>
+      </div>
+      <div class="sncb-step">
+        <div class="step-num">3</div>
+        <div class="step-body">第二個 N 解離（慢）→ en 完全離去</div>
+        <div class="step-rate slow">slow</div>
+      </div>
+      <div class="sncb-step">
+        <div class="step-num">4</div>
+        <div class="step-body">第二個 H₂O 進入（快）</div>
+        <div class="step-rate fast">fast</div>
+      </div>
+    </div>
+    <p style="font-size:0.83rem;color:var(--ink-light);margin-top:0.6rem">
+      ⚠️ 步驟1的逆反應（reattachment）也快 → aquation 整體速率↓
+    </p>
+  </div>
+
+  <div class="note-card">
+    <span class="red">記憶口訣：</span>「螯合配基難解離，因為一隻腳斷了，另一隻還抓著金屬，隨時可以重新抓上去！」<br><br>
+    <span class="blue">注意區分</span>熱力學螯合效應 vs. 動力學螯合效應：<br>
+    → 熱力學：多牙配基取代後更穩定（較大的 K）<br>
+    → 動力學：解離速率很慢（不是因為沒有驅動力，而是因為離去後容易再接回來）
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ════════════════════════════════════════════════════ -->
+<!-- 12.5 立體化學 -->
+<!-- ════════════════════════════════════════════════════ -->
+<section class="section" id="s125">
+  <div class="section-header">
+    <span class="section-num">12.5</span>
+    <div>
+      <div class="section-title">反應的立體化學</div>
+      <div class="section-subtitle">Stereochemistry of Reactions</div>
+    </div>
+  </div>
+
+  <p class="prose">
+    解離機制下，產物的<strong>立體化學可能與反應物相同或不同</strong>，
+    取決於生成的五配位中間體形狀（SP 或 TBP）以及配基的進入位置。
+  </p>
+
+  <div class="info-box sage">
+    <h4>📌 關鍵觀察（Table 12.9）</h4>
+    <p style="font-size:0.88rem;line-height:1.9">
+      對 <strong>cis-[Co(en)₂LX]ⁿ⁺</strong>：酸性水解 → <strong>100% cis 產物</strong>（方錐形 SP 過渡態）<br>
+      對 <strong>trans-[Co(en)₂LX]ⁿ⁺</strong>：酸性水解 → <strong>cis 和 trans 混合</strong>（比例視 L 和 X 而定）
+    </p>
+  </div>
+
+  <div class="note-card">
+    <span class="hi">重要規律：</span><br>
+    • <span class="green">cis 反應物</span> → 主要得到 cis 產物（retention of configuration）<br>
+    • <span class="blue">trans 反應物</span> → 得到 cis 和 trans 的混合物<br><br>
+    這說明：cis 複合物更傾向形成<span class="red">方錐形中間體（SP）</span>（保持構型），<br>
+    trans 複合物則有更多可能走三角雙錐形（TBP）路徑（導致異構化）。
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ════════════════════════════════════════════════════ -->
+<!-- 12.5.1 trans取代 -->
+<!-- ════════════════════════════════════════════════════ -->
+<section class="section" id="s1251">
+  <div class="section-header">
+    <span class="section-num">12.5.1</span>
+    <div>
+      <div class="section-title">trans 複合物的取代</div>
+      <div class="section-subtitle">Substitution in trans Complexes</div>
+    </div>
+  </div>
+
+  <p class="prose">
+    trans-[M(LL)₂BX]（LL = 雙牙配基）的解離取代，
+    可以沿<strong>三條解離路徑</strong>進行，生成不同立體化學產物。
+  </p>
+
+  <div class="pathway-grid">
+    <div class="pathway-card" onclick="showPathway('trans','sp')">
+      <span class="pathway-label">路徑 (a)</span>
+      <h5>方錐形中間體（SP）</h5>
+      <div style="font-size:0.83rem;color:var(--ink-light)">
+        B 在軸向 → X 離去 → SP 中間體<br>
+        Y 從空位進入（正上方）<br>
+        <strong style="color:var(--sage-dk)">→ trans 產物（保持構型）</strong>
+      </div>
+    </div>
+    <div class="pathway-card" onclick="showPathway('trans','tbp_eq')">
+      <span class="pathway-label">路徑 (b)</span>
+      <h5>TBP 中間體（B 在赤道面）</h5>
+      <div style="font-size:0.83rem;color:var(--ink-light)">
+        B 在赤道面（常見）→ 三個面可進攻<br>
+        <strong style="color:var(--red-note)">→ 2/3 cis（外消旋）+ 1/3 trans</strong>
+      </div>
+    </div>
+    <div class="pathway-card" onclick="showPathway('trans','tbp_ax')">
+      <span class="pathway-label">路徑 (c)</span>
+      <h5>TBP 中間體（B 在軸向）</h5>
+      <div style="font-size:0.83rem;color:var(--ink-light)">
+        B 在軸向（少見，需要大幅重排）<br>
+        <strong style="color:var(--blue-note)">→ cis（外消旋混合物）</strong>
+      </div>
+    </div>
+  </div>
+
+  <div class="info-box clay" id="pathway-detail" style="display:none">
+    <h4 id="pathway-title">路徑詳情</h4>
+    <p id="pathway-body" style="font-size:0.88rem;line-height:1.9"></p>
+  </div>
+
+  <!-- SVG diagram for trans -->
+  <div class="diagram-svg">
+    <h4>三條路徑的中間體與產物示意</h4>
+    <svg width="520" height="200" viewBox="0 0 520 200" style="max-width:100%">
+      <!-- Route a: SP → trans -->
+      <g transform="translate(20,20)">
+        <rect x="0" y="30" width="100" height="50" rx="6" fill="#f0f6f2" stroke="#7d9b8a" stroke-width="1.5"/>
+        <text x="50" y="52" text-anchor="middle" font-size="11" fill="#5a7a67" font-weight="600">trans-BX</text>
+        <text x="50" y="68" text-anchor="middle" font-size="10" fill="#888">[M(LL)₂BX]</text>
+        <!-- arrow -->
+        <line x1="105" y1="55" x2="135" y2="55" stroke="#7d9b8a" stroke-width="1.5" marker-end="url(#arr1)"/>
+        <text x="120" y="48" text-anchor="middle" font-size="9" fill="#c04040">−X</text>
+        <rect x="140" y="30" width="80" height="50" rx="6" fill="#e8f2ec" stroke="#7d9b8a" stroke-width="1.5"/>
+        <text x="180" y="52" text-anchor="middle" font-size="10" fill="#5a7a67" font-weight="600">SP中間體</text>
+        <text x="180" y="66" text-anchor="middle" font-size="9" fill="#888">B在軸向</text>
+        <!-- arrow -->
+        <line x1="225" y1="55" x2="255" y2="55" stroke="#7d9b8a" stroke-width="1.5" marker-end="url(#arr1)"/>
+        <text x="240" y="48" text-anchor="middle" font-size="9" fill="#508060">+Y</text>
+        <rect x="260" y="30" width="90" height="50" rx="6" fill="#dff0e8" stroke="#508060" stroke-width="2"/>
+        <text x="305" y="52" text-anchor="middle" font-size="11" fill="#2d6e4e" font-weight="700">trans 產物</text>
+        <text x="305" y="67" text-anchor="middle" font-size="9" fill="#508060">保持構型 ✓</text>
+        <text x="175" y="12" text-anchor="middle" font-size="10" fill="#7d9b8a" font-weight="600">路徑 (a)：SP</text>
+      </g>
+
+      <!-- Route b: TBP eq -->
+      <g transform="translate(20,110)">
+        <rect x="0" y="0" width="100" height="50" rx="6" fill="#fef4e8" stroke="#b08060" stroke-width="1.5"/>
+        <text x="50" y="20" text-anchor="middle" font-size="10" fill="#7a5030" font-weight="600">TBP (B eq)</text>
+        <text x="50" y="35" text-anchor="middle" font-size="9" fill="#888">常見路徑</text>
+        <line x1="105" y1="25" x2="135" y2="25" stroke="#b08060" stroke-width="1.5" marker-end="url(#arr2)"/>
+        <rect x="140" y="0" width="90" height="50" rx="6" fill="#fdeee0" stroke="#c07040" stroke-width="2"/>
+        <text x="185" y="18" text-anchor="middle" font-size="10" fill="#c04040" font-weight="700">2/3 cis</text>
+        <text x="185" y="32" text-anchor="middle" font-size="9" fill="#c04040">（外消旋 Λ+Δ）</text>
+        <text x="185" y="44" text-anchor="middle" font-size="9" fill="#888">+ 1/3 trans</text>
+        <text x="75" y="-8" text-anchor="middle" font-size="10" fill="#b08060" font-weight="600">路徑 (b)：TBP (B 赤道)</text>
+      </g>
+
+      <defs>
+        <marker id="arr1" markerWidth="6" markerHeight="6" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L6,3 L0,6 Z" fill="#7d9b8a"/>
+        </marker>
+        <marker id="arr2" markerWidth="6" markerHeight="6" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L6,3 L0,6 Z" fill="#b08060"/>
+        </marker>
+      </defs>
+    </svg>
+  </div>
+
+  <div class="note-card">
+    <span class="blue">路徑(b)的統計分析</span>：TBP 中 B 在赤道面時，三個三角面都可被 Y 進攻。<br>
+    → 1/3 面讓 Y 佔與 B 反式位置 = trans 產物<br>
+    → 2/3 面讓 Y 佔與 B 順式位置 = cis 產物（理想情況，實際比例隨 L 和 X 而異）<br><br>
+    <span class="red">路徑(c)為何少見？</span><br>
+    B 要從赤道面（Oh 中的赤道）移到 TBP 的軸向位，需要：<br>
+    → 一個 N 移動 90°，另兩個 N 各移動 30°（vs 路徑 b 只需兩個 N 各移 30°）<br>
+    → LL 環在赤道面要被拉長得更多<br>
+    → 能量代價高，所以罕見
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>中間體類型</th>
+          <th>B 位置</th>
+          <th>主要產物</th>
+          <th>概率</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>方錐形（SP）</strong></td>
+          <td>B 在軸向</td>
+          <td style="color:var(--sage-dk);font-weight:600">trans（保型）</td>
+          <td>主要路徑</td>
+        </tr>
+        <tr>
+          <td><strong>三角雙錐（TBP）</strong></td>
+          <td>B 在赤道面（常見）</td>
+          <td style="color:var(--red-note)">2/3 cis + 1/3 trans</td>
+          <td>常見</td>
+        </tr>
+        <tr>
+          <td><strong>三角雙錐（TBP）</strong></td>
+          <td>B 在軸向（少見）</td>
+          <td style="color:var(--blue-note)">cis（外消旋）</td>
+          <td>少見（LL 環阻礙）</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<hr class="section-divider">
+
+<!-- ════════════════════════════════════════════════════ -->
+<!-- 12.5.2 cis取代 -->
+<!-- ════════════════════════════════════════════════════ -->
+<section class="section" id="s1252">
+  <div class="section-header">
+    <span class="section-num">12.5.2</span>
+    <div>
+      <div class="section-title">cis 複合物的取代</div>
+      <div class="section-subtitle">Substitution in cis Complexes</div>
+    </div>
+  </div>
+
+  <p class="prose">
+    cis-[M(LL)₂BX] 的解離取代也有三種中間體，
+    但<strong>實驗上酸性水解幾乎得 100% cis 產物</strong>，提示主要走方錐形（SP）路徑。
+  </p>
+
+  <div class="tabs">
+    <div class="tab-buttons">
+      <button class="tab-btn active" onclick="switchTab(this,'cis-sp')">路徑 (a) SP 方錐形</button>
+      <button class="tab-btn" onclick="switchTab(this,'cis-tbp')">路徑 (b) TBP（B eq）</button>
+      <button class="tab-btn" onclick="switchTab(this,'cis-tbp2')">路徑 (c) TBP（B ax，少見）</button>
+    </div>
+    <div class="tab-content active" id="cis-sp">
+      <p style="font-size:0.9rem;line-height:1.85">
+        <strong>B 在赤道面，X 在軸向解離</strong> → 方錐形中間體<br>
+        Y 從原本 X 的位置（空位）填入<br>
+        → <span style="color:var(--sage-dk);font-weight:700">保持 cis 構型（retention of configuration）</span><br><br>
+        這是酸性水解（acid aquation）的主要路徑，因為得到 100% cis 產物。
+      </p>
+    </div>
+    <div class="tab-content" id="cis-tbp">
+      <p style="font-size:0.9rem;line-height:1.85">
+        <strong>B 在赤道面，X 解離後形成 TBP</strong><br>
+        三角面有三個可進攻位置：<br>
+        • 2 個位置 → <span style="color:var(--sage-dk);font-weight:600">cis 產物</span>（保持構型）<br>
+        • 1 個位置 → <span style="color:var(--red-note);font-weight:600">trans 產物</span><br><br>
+        統計上得 2/3 cis（保型）+ 1/3 trans。<br>
+        鹼性取代（base substitution）中此路徑更顯著，得約 97-66% cis，約 2:1 的 Δ 構型保留。
+      </p>
+    </div>
+    <div class="tab-content" id="cis-tbp2">
+      <p style="font-size:0.9rem;line-height:1.85">
+        <strong>B 在軸向，X 解離後形成 TBP</strong>（少見）<br>
+        兩個三角面可進攻，第三面被 LL 環遮擋。<br>
+        兩個位置均給出 <span style="color:var(--blue-note);font-weight:600">cis 產物</span>，但構型不同（Λ 和 Δ 各 50%）<br>
+        → 外消旋 cis 混合物<br><br>
+        注意：cis 和 trans 反應物的此路徑（axial B）中間體是<strong>相同的</strong>（見 Fig 12.9c 和 12.10c 完全相同）。
+      </p>
+    </div>
+  </div>
+
+  <div class="note-card">
+    <span class="red">General Rule（手寫筆記上的重點）：</span><br>
+    • <span class="green">cis 起始物</span> → 主要得到 cis 產物（percentage of cis 較高）<br>
+    • <span class="blue">trans 起始物</span> → 往往得到 cis/trans 的平衡混合物<br><br>
+    酸性水解 cis 複合物得 100% cis → 提示方錐形（SP）transition state<br>
+    鹼性取代（SN₁CB）cis 複合物得 66-97% cis，但有部分外消旋化 → TBP 路徑也參與
+  </div>
+
+  <!-- Final quiz -->
+  <div class="quiz-card">
+    <h4>🧪 小測驗：立體化學</h4>
+    <div class="quiz-q">
+      trans-[M(LL)₂BX] 在 TBP 中間體（B 在赤道面）路徑下，理論上 cis 產物的統計比例為多少？
+    </div>
+    <div class="quiz-opts">
+      <div class="quiz-opt" onclick="answerQuiz(this,'wrong','q3')">100%</div>
+      <div class="quiz-opt" onclick="answerQuiz(this,'correct','q3')">2/3（約 67%）</div>
+      <div class="quiz-opt" onclick="answerQuiz(this,'wrong','q3')">1/3（約 33%）</div>
+      <div class="quiz-opt" onclick="answerQuiz(this,'wrong','q3')">50%</div>
+    </div>
+    <div class="quiz-feedback" id="fb-q3"></div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════ -->
+<!-- SUMMARY -->
+<!-- ════════════════════════════════════════════════════ -->
+<div class="summary-box">
+  <h3>📚 章節總整理</h3>
+  <ul>
+    <li>LFAE：正值→惰性（d³, LS d⁴⁵⁶），負值→活潑（d⁷⁹¹⁰），d⁸ 例外（通常不形成八面體）</li>
+    <li>D 機制五大證據：速率不隨 Y 改變、電荷↑速率↓、空間擁擠↑速率↑、LFER、ΔV‡&gt;0</li>
+    <li>LFER：log k 對 log K 呈線性 = 離去基鍵強度主導速率 = 支持 D 機制</li>
+    <li>Cr(III) + NH₃配基 → Id；Cr(III) + H₂O配基 → Ia（電子密度決定機制）</li>
+    <li>SN₁CB：外表像 A（二階動力學），本質是 D；OH⁻ 只是催化去質子化，rds 是 X⁻ 解離</li>
+    <li>動力學螯合效應：多牙配基解離慢，因第一鍵斷後容易重新連回（reattachment 快）</li>
+    <li>立體化學：SP 中間體→保型；TBP（B eq）→ 2/3 cis + 1/3 trans；TBP（B ax，少見）→ 外消旋 cis</li>
+    <li>通則：cis 起始物多得 cis 產物；trans 起始物常得 cis/trans 混合</li>
+  </ul>
+</div>
+
 </main>
+
+<button id="backTop" onclick="scrollTo({top:0,behavior:'smooth'})">↑</button>
+
 <script>
-  window.addEventListener('scroll', () => {
-    const doc = document.documentElement;
-    const pct = (window.scrollY / (doc.scrollHeight - doc.clientHeight)) * 100;
-    document.getElementById('progressBar').style.width = pct + '%';
+// ── SCROLL REVEAL ──
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.08 });
+document.querySelectorAll('.section').forEach(s => observer.observe(s));
+
+// ── PROGRESS BAR ──
+window.addEventListener('scroll', () => {
+  const doc = document.documentElement;
+  const pct = (window.scrollY / (doc.scrollHeight - doc.clientHeight)) * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('backTop').classList.toggle('show', window.scrollY > 400);
+});
+
+// ── NAV ACTIVE ──
+const navLinks = document.querySelectorAll('nav.toc a');
+const sections = document.querySelectorAll('section[id]');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => { if(window.scrollY >= s.offsetTop - 80) current = s.id; });
+  navLinks.forEach(a => {
+    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
   });
+});
+
+// ── EVIDENCE TOGGLE ──
+function toggleEv(el) {
+  el.classList.toggle('open');
+}
+
+// ── QUIZ ──
+const fbMessages = {
+  q1: {
+    correct: '✅ 正確！d⁴ low-spin 強場的 LFAE = +0.686Δₒ，是所有組態中最大的。這說明 d⁴ LS 錯合物解離活化能最高，最為惰性。',
+    wrong: '❌ 再想想。查看 Table 12.3，強場下哪個 d 組態的 LFAE 數值最大（最正）？'
+  },
+  q2: {
+    correct: '✅ 正確！速率差超過 100 倍（通常定為 >100 倍差異）是 Ia 機制的特徵，因為進入配基的種類對速率影響很大。Ia 機制中 Y 的鍵形成先於 X 的鍵斷裂，因此 Y 的性質至關重要。',
+    wrong: '❌ 提示：D 和 Id 機制中，進入配基 Y 的影響很小（速率差 <10倍）。哪個機制對 Y 最敏感？'
+  },
+  q3: {
+    correct: '✅ 正確！TBP 中 B 在赤道面，三角面有 3 個攻擊位點：2 個給 cis 產物，1 個給 trans 產物。純統計下 cis 比例 = 2/3 ≈ 67%。',
+    wrong: '❌ 想像 TBP 的三角面：B 在赤道面時，共有 3 條邊可以讓 Y 進入。計算一下有幾條邊得 cis、幾條邊得 trans？'
+  }
+};
+
+function answerQuiz(el, result, qid) {
+  const card = el.closest('.quiz-card');
+  const opts = card.querySelectorAll('.quiz-opt');
+  opts.forEach(o => o.style.pointerEvents = 'none');
+  el.classList.add(result);
+  const fb = document.getElementById('fb-' + qid);
+  fb.textContent = fbMessages[qid][result === 'correct' ? 'correct' : 'wrong'];
+  fb.className = 'quiz-feedback show ' + (result === 'correct' ? 'ok' : 'no');
+}
+
+// ── TABS ──
+function switchTab(btn, id) {
+  const tabs = btn.closest('.tabs');
+  tabs.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  tabs.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById(id).classList.add('active');
+}
+
+// ── PATHWAY DETAIL ──
+const pathwayData = {
+  'trans-sp': {
+    title: '路徑 (a)：方錐形（Square Pyramidal）中間體',
+    body: `B 配基位於軸向，X 在赤道面位置上離去後形成 SP 中間體。
+進入配基 Y 直接從空出的那個位置（赤道方向）進入，
+B 仍在原本的軸向位置，構型保留。
+→ <strong style="color:var(--sage-dk)">trans 產物（retention of configuration）</strong>
+這是最簡單的路徑，沒有重排。`
+  },
+  'trans-tbp_eq': {
+    title: '路徑 (b)：三角雙錐（TBP）中間體（B 在赤道面）',
+    body: `X 解離後，B 從軸向移動到赤道面（兩個 N 各移 30°），形成 TBP。
+三角面（trigonal face）有 3 條邊，Y 可從任一邊進入：
+• 邊 1 和邊 2：Y 在 B 的 cis 位置 → <strong>cis 產物</strong>（各生成 Λ 和 Δ 的外消旋體）
+• 邊 3：Y 在 B 的 trans 位置 → <strong>trans 產物</strong>
+統計比例：2/3 cis（外消旋）：1/3 trans
+注意：實際比例受 L 和 X 影響，通常不到純統計值。`
+  },
+  'trans-tbp_ax': {
+    title: '路徑 (c)：三角雙錐（TBP）中間體（B 在軸向）—— 少見',
+    body: `X 解離後，B 跑到 TBP 的軸向位置。
+這需要一個 N 移動 90°（很大），能量代價高，所以此路徑較少走。
+三角面的兩條邊可供 Y 進入（第三條被 LL 環擋住）。
+兩個位置均得到 <strong>cis 產物</strong>，但 Λ 和 Δ 各半 → 外消旋 cis 混合物。`
+  }
+};
+
+function showPathway(type, path) {
+  const key = type + '-' + path;
+  const box = document.getElementById('pathway-detail');
+  const title = document.getElementById('pathway-title');
+  const body = document.getElementById('pathway-body');
+  if(pathwayData[key]) {
+    title.textContent = pathwayData[key].title;
+    body.innerHTML = pathwayData[key].body;
+    box.style.display = 'block';
+    box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+}
+
+// ── LFER CANVAS ──
+(function drawLFER() {
+  const canvas = document.getElementById('lferCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const pad = { l: 60, r: 30, t: 30, b: 50 };
+  const data = [
+    { x: -1.4, y: -7.4, label: 'F⁻' },
+    { x: -0.8, y: -6.6, label: 'H₂PO₄⁻' },
+    { x: -0.3, y: -6.2, label: 'Cl⁻' },
+    { x:  0.4, y: -5.6, label: 'Br⁻' },
+    { x:  0.8, y: -5.3, label: 'I⁻' },
+    { x:  1.1, y: -4.9, label: 'NO₃⁻' },
+  ];
+  const xMin = -1.8, xMax = 1.6, yMin = -7.8, yMax = -4.5;
+  function toX(v) { return pad.l + (v - xMin) / (xMax - xMin) * (W - pad.l - pad.r); }
+  function toY(v) { return pad.t + (1 - (v - yMin) / (yMax - yMin)) * (H - pad.t - pad.b); }
+
+  // Background
+  ctx.fillStyle = '#fafaf8';
+  ctx.fillRect(0, 0, W, H);
+
+  // Grid
+  ctx.strokeStyle = '#e8e4da';
+  ctx.lineWidth = 1;
+  for(let gx = -1.5; gx <= 1.5; gx += 0.5) {
+    ctx.beginPath(); ctx.moveTo(toX(gx), pad.t); ctx.lineTo(toX(gx), H - pad.b); ctx.stroke();
+  }
+  for(let gy = -7.5; gy <= -4.5; gy += 0.5) {
+    ctx.beginPath(); ctx.moveTo(pad.l, toY(gy)); ctx.lineTo(W - pad.r, toY(gy)); ctx.stroke();
+  }
+
+  // Axes
+  ctx.strokeStyle = '#5a5750';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(pad.l, pad.t); ctx.lineTo(pad.l, H - pad.b); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(pad.l, H - pad.b); ctx.lineTo(W - pad.r, H - pad.b); ctx.stroke();
+
+  // Axis labels
+  ctx.fillStyle = '#5a5750';
+  ctx.font = '11px JetBrains Mono, monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText('log Keq', W/2, H - 8);
+  ctx.save(); ctx.translate(14, H/2); ctx.rotate(-Math.PI/2);
+  ctx.fillText('log k', 0, 0); ctx.restore();
+
+  // Tick labels
+  ctx.font = '10px JetBrains Mono, monospace';
+  for(let gx = -1.5; gx <= 1.5; gx += 0.5) {
+    ctx.fillStyle = '#888';
+    ctx.textAlign = 'center';
+    ctx.fillText(gx.toFixed(1), toX(gx), H - pad.b + 14);
+  }
+  ctx.textAlign = 'right';
+  for(let gy = -7; gy >= -7.5 || gy <= -5; gy += 0.5) {
+    if(gy > -7.8 && gy < -4.5) ctx.fillText(gy.toFixed(1), pad.l - 6, toY(gy) + 4);
+  }
+
+  // Trend line
+  ctx.strokeStyle = '#7d9b8a';
+  ctx.lineWidth = 1.5;
+  ctx.setLineDash([5, 3]);
+  ctx.beginPath(); ctx.moveTo(toX(-1.7), toY(-7.6)); ctx.lineTo(toX(1.3), toY(-4.7)); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Points
+  data.forEach((d, i) => {
+    const px = toX(d.x), py = toY(d.y);
+    ctx.beginPath();
+    ctx.arc(px, py, 6, 0, Math.PI * 2);
+    ctx.fillStyle = '#7d9b8a';
+    ctx.fill();
+    ctx.strokeStyle = '#fff';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    ctx.fillStyle = '#2c2a24';
+    ctx.font = '10px Noto Sans TC, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.fillText(d.label, px + 9, py + 4);
+  });
+
+  // Hover
+  let hovered = null;
+  canvas.addEventListener('mousemove', e => {
+    const rect = canvas.getBoundingClientRect();
+    const mx = (e.clientX - rect.left) * (W / rect.width);
+    const my = (e.clientY - rect.top) * (H / rect.height);
+    hovered = null;
+    data.forEach(d => {
+      const dx = mx - toX(d.x), dy = my - toY(d.y);
+      if(Math.sqrt(dx*dx + dy*dy) < 12) hovered = d;
+    });
+    // Redraw
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = '#fafaf8'; ctx.fillRect(0, 0, W, H);
+    ctx.strokeStyle = '#e8e4da'; ctx.lineWidth = 1;
+    for(let gx = -1.5; gx <= 1.5; gx += 0.5) {
+      ctx.beginPath(); ctx.moveTo(toX(gx), pad.t); ctx.lineTo(toX(gx), H - pad.b); ctx.stroke();
+    }
+    for(let gy = -7.5; gy <= -4.5; gy += 0.5) {
+      ctx.beginPath(); ctx.moveTo(pad.l, toY(gy)); ctx.lineTo(W - pad.r, toY(gy)); ctx.stroke();
+    }
+    ctx.strokeStyle = '#5a5750'; ctx.lineWidth = 1.5;
+    ctx.beginPath(); ctx.moveTo(pad.l, pad.t); ctx.lineTo(pad.l, H - pad.b); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(pad.l, H - pad.b); ctx.lineTo(W - pad.r, H - pad.b); ctx.stroke();
+    ctx.fillStyle = '#5a5750'; ctx.font = '11px JetBrains Mono, monospace'; ctx.textAlign = 'center';
+    ctx.fillText('log Keq', W/2, H - 8);
+    ctx.save(); ctx.translate(14, H/2); ctx.rotate(-Math.PI/2);
+    ctx.fillText('log k', 0, 0); ctx.restore();
+    ctx.font = '10px JetBrains Mono, monospace';
+    for(let gx = -1.5; gx <= 1.5; gx += 0.5) {
+      ctx.fillStyle = '#888'; ctx.textAlign = 'center';
+      ctx.fillText(gx.toFixed(1), toX(gx), H - pad.b + 14);
+    }
+    ctx.textAlign = 'right';
+    [-7.5,-7,-6.5,-6,-5.5,-5].forEach(gy => {
+      ctx.fillText(gy.toFixed(1), pad.l - 6, toY(gy) + 4);
+    });
+    ctx.strokeStyle = '#7d9b8a'; ctx.lineWidth = 1.5; ctx.setLineDash([5, 3]);
+    ctx.beginPath(); ctx.moveTo(toX(-1.7), toY(-7.6)); ctx.lineTo(toX(1.3), toY(-4.7)); ctx.stroke();
+    ctx.setLineDash([]);
+    data.forEach(d => {
+      const px = toX(d.x), py = toY(d.y);
+      const isHov = hovered === d;
+      ctx.beginPath(); ctx.arc(px, py, isHov ? 8 : 6, 0, Math.PI * 2);
+      ctx.fillStyle = isHov ? '#5a7a67' : '#7d9b8a'; ctx.fill();
+      ctx.strokeStyle = '#fff'; ctx.lineWidth = 1.5; ctx.stroke();
+      ctx.fillStyle = '#2c2a24'; ctx.font = '10px Noto Sans TC, sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText(d.label, px + 9, py + 4);
+    });
+    if(hovered) {
+      ctx.fillStyle = '#fafaf8';
+      ctx.strokeStyle = '#7d9b8a';
+      ctx.lineWidth = 1;
+      const tx = toX(hovered.x) + 12, ty = toY(hovered.y) - 25;
+      ctx.beginPath(); ctx.rect(tx-4, ty-14, 140, 20); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = '#2c2a24'; ctx.font = 'bold 10px JetBrains Mono, monospace'; ctx.textAlign = 'left';
+      ctx.fillText(`${hovered.label}: log K=${hovered.x}, log k=${hovered.y}`, tx, ty);
+    }
+  });
+})();
 </script>
+
 </body>
 </html>
